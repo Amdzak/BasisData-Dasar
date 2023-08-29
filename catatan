@@ -1,0 +1,271 @@
+MYSQL COMMAND
+
+SHOW ENGINES;                   =   untuk melihat engine yang ada rekomendasi InnoDB
+
+##DATABASE##
+SHOW DATABASES;                 =   menampilkan database yang ada
+USE nama_database;              =   menggunakan/masuk sebuah database
+CREATE nama_database;           =   membuat sebuah nama databse baru    
+DROP DATABASE nama_database;    =   untuk menghapus sebuah database
+
+##TABLE##
+SHOW nama_table;                =   menampilkan table yang ada
+DESC nama_table;                =   untuk melihat isi atau struktur dari sebuah table
+DROP TABLE nama_table;          =   untuk menghapus table
+SHOW CREATE TABLE nama_table;   =   untuk menampilkan command pembuatan dari tabel
+NOT NULL                        =   untuk mengaharuskan kita mengisi data dan tidak boleh kosong 
+TRUNCATE nama_table             =   untuk menghapus isi dari sebuah data yang ada pada table
+
+##MEMBUAT TABLE##
+key merupakan keterangan yang akan di gunakan (nama,id,jenis_kelamin,usia,waktu)
+tipe_data merupakan jenis pengguanan (varchar,datetime,timestamp,int,float,UNSIGNED[merupakan nilai tidak boleh minus])
+untuk menulisakn engine bersifat optional   
+CREATE nama_table (
+    key tipe_data,
+    key tipe_data(length),
+    nama VARCHAR(100),
+    harga INT,
+) ENGINE = InnoDB;
+
+##MENGUBAH TABLE / MEMODIFIKASI##
+ALTER TABLE nama_table                      =   untuk memilih table yang akan di modifikasi 
+    ADD COLUMN nama_kolom tipe_data         =   untuk menambahkan kolom baru jika lupa belum di tambahkan ke dalam table
+    DROP COLUMN nama_kolom                  =   untuk menghapus kolom yang tidak di inginkan
+    CHANGE nama_old nama_new tipe_data      =   untuk mengganganti nama atau rename dari kolom 
+    MODIFY nama_kolom tipe_data AFTER kolom =   untuk melakukan modifikasi yaitu merubah posisi dari sebuah kolom AFTER berarti dia akan di tempatkan setalah kolom yang di tentukan
+    MODIFY nama_kolom tipe_data FIRST       =   untuk melakukan modifikasi yaitu merubah posisi mejadi di awal
+
+##DEFAULT VALUE##
+default value merupakan nilai defautl jika sebuah kolom tidak di isi oleh data apapun.
+dapat kita lakukan perubahan nilai default disaat kita membuat table dengan nemanbahkan DEAULT NILAI(nilai di ganti oleh value yang di inginkan)
+    CREATE TABLE nama_table nama varchar(100) DEFAULT "nama kosong";    // jika tidak mengisi nama maka akan otomatis terisi data dengan nilai "nama kosong"
+
+##INSERT / MEMASUKAN DATA##
+memasukan data kedalam sebuah table mengharuskan kita memiliki tabelnya terlebih dahulu
+jika kita ingin memasukan nilainya maka kita harus memilih kolom mana yang akan di isikan datanya, jika nama kolomnya tidak di isi maka akan di anggap mengisikan semua kolomnya
+jika ingin memasukan sebuah data maka kita menggunakan syntax INSERT INTO
+
+INSERT INTO nama_table(kolom1,kolom2,kolom3) VALUES (
+    "nilai kolom1",
+    "nilai kolom2",
+    "nilai kolom3"
+)
+
+    MEMBUAT TABLE product
+        CREATE TABLE product (
+            id VARCHAR(10) NOT NULL,
+            nama VARCHAR(100) NOT NULL,
+            kategori ENUM("Makanan","Minuman","Lain-Lain"),
+            harga INT UNSIGNED NOT NULL,
+            jumlah INT UNSIGNED NOT NULL,
+            deskripsi TEXT,
+            waktu timestamp default current_time
+        );
+
+    MENGISIKAN DATA (SINGGEL)
+        INSERT INTO product(id,nama,harga) VALUES 
+            ("01","Minuman",1000);
+        
+        (MULTIPLE)
+        INSERT INTO product(id,nama,harga) VALUES 
+            ("01","Minuman",1000),
+            ("02","Makanan",2000),
+            ("03","Snack",500);
+
+##MENGAMBIL DATA##
+SELECT nama_kolom FROM nama_table;                   =   untuk menampilkan semua data yangada pada table yang di tuju jika ingin semua nama_kolom di ganti dengan *
+    SELECT nama_kolom1,nama_kolom2 FROM nama table;  =   jika ingin mengambil kolom tertentu
+
+##PRIMARY KEY##
+ALTER TABLE nama_table ADD PRIMARY KEY (nama_kolom); =   untuk menambahkan primarykey jika sudah terlanjut melakukan pembuatan table
+    ##SAAT MEMBUAT TABLE
+    CREATE TABLE nama_table (
+        id INT NOT NULL,
+        nama VARCHAR(100) DEFAULT "none",
+        PRMARY KEY (id)
+    );
+
+##WHERE CLAUSE##
+where caluse merupakan sebuh pengkodisian dimana dia disandingakn dengan syntax select
+where caluse juga bisa membuat kita mencari lebih detail, untuk where clause tidak memandang besar kecil suatu abjad
+
+    SELECT nama_kolom FROM nama_table WHERE kondisi1;
+    SELECT nama,harga FROM product WHERE nama = "mie ayam";     =   akan mengambil data spesifik berupa nama yaitu mie ayam
+
+##UPDATE DATA##
+dalam pengguanan update data harus menggunakan WHERE clause supaya tidak semua datanya terubah
+jadi hati hatii dalam melakukan update data supaya tidak terjadi sebuah kesalahan
+
+    UPDATE nama_table SET nama_kolom = "updatean" WHERE pengkodisian;
+
+    ##UPDATE DATA SINGLE##
+        UPDATE product SET kategori = "Makanan" WHERE id=1;         =   melakukan update pada id yang bernilai 1 yang nama akan di ubah kolom kategorinya menjadi Makanan
+
+    ##UPDATE MULTIPLE DATA##                                        =   melakukan multiple update dengan cara menambhakan , didalam setnya
+        UPDATE product SET kategori = "minuman",
+        deskripsi = "minuman jus buah" where id = 4;
+
+##DELETE DATA##
+cara melakuakn delete data caranya sama seperti update yaitu dengan menggunakan where clause
+    DELETE FROM nama_table WHERE kondisi;
+
+##ALIAS##
+Alias merupakan sebuh fitur dimana kita dapat mengganti nama kolom di dalam tabel ketika kita menggunakan select 
+pengguanan Alias akan lebih bermanfaat jika di gunakan dengan join alias sendiri di tandai dengan keyword AS
+
+    SELECT nama_kolom AS "nama_ganti" FROM nama_table;
+
+    SELECT id           AS "Kode Barang",
+           name         AS "Nama Produk",
+           price        AS "Harga",
+           deskripsi    AS "Keterangn"
+           FROM product;
+
+##WHERE OPERATOR##
+    =                   :   Sama dengan
+    <>, !=              :   Tidak sama dengan
+    <                   :   Kurang dari
+    <=                  :   Kurang dari sama dengan
+    >                   :   lebih dari
+    >=                  :   lebih dari sama dengan           
+    AND                 :   jika ke 2 kondisi terpenuhi
+    OR                  :   jika salah 1 kondisi terpenuhi
+    ()                  :   prioritas yang di dahulukan
+    LIKE                :   mencari kata" yang di tentukan operator ini menggunakan simbol persen %
+      LIKE "%a"         :   kata yang di akhiri dengan huruf a
+      LIKE "b%"         :   kata yang di awali huruf b
+      LIKE "%c%"        :   kata yang di tengah" ada huruf caluse
+      NOT LIKE          :   tidak sama
+    IS NULL             :   untuk mencari nilai NULL
+    IS NOT NULL         :   untuk mencari data yang tidak NULL
+    BETWEEN             :   operasi dan pengganti AND SELECT * FROM product WHERE price BETWEEN 2 AND 10;
+    IN(value1,value2)   :   operasi atau pengganti OR SELECT * FROM product WHERE kategori IN("makanan","minuman");
+
+##ORDER BY CLAUSE##
+order by merupakan keyword yang akan mengurutkan data berdasarkan kolom yg di pilih order by di kombinasikan dengan menggunakan select
+secara default order by akan di urutkan berdasarkan ascending 
+kalau ingin lebih dari 1 kolom tambahkan koma saja
+    ASC     =   untuk kecil ke besar
+    DESC    =   untuk besar ke kecil
+
+    SELECT * FROM nama_table ORDER BY nama_kolom;
+    SELECT * FROM product ORDER BY id ASC,nama DESC;
+
+##LIMIT CLAUSE##
+limit clause merupakan sebuah cara untuk melakukan pembatasan data pada suatu tampilan, limit di gabung dengan select
+
+    SELECT nama_kolom FROM nama_table ORDER BY nama_kolom LIMIT nilai_integer;
+    SELECT * FROM product ORDER BY id LIMIT 2;      =   akan menampilkan sebanyak 2 baris saja
+    SELECT * FROM product ORDER BY id LIMIT 2,2;    =   akan menampilkandata sebanyak 2 dan akan melakukan skip 2 data sebelumnya (jika sebelumnya no 1-2 maka selanjutnya 3-4)      
+
+##SELECT DISTINCT##    
+merupakan sebuah syntax yang akan menghapuskan nilai yang sama atau dobel
+
+    SELECT DISTINCT nama_kolom FROM nama_table;     =   akan menghapus nilai duplikat karena ada distinct
+
+##ARITMATHIC OPERATOR##
+    %,MOD               =   modulu atau sisa bagi
+    *                   =   operator perkalian
+    /                   =   operator pertambahan
+    +                   =   operator penjumlahan
+    -                   =   operator pengurangan
+    -..                 =   jika ada - di delam suatu bilangan maka akan mengubah nilainya mejadi negatif
+    DIV                 =   pembagian yang nilainya akan selalu integer SELECT id,price DIV 1000 AS "harga" from product;
+    Matematic function  =   tidak terlalu saya jelaskan karena banyak contohnya saja ada sin() cos() tan() pi()
+
+##AUTO INCREMENT##
+merupakan nilai yang akan menambahkan nilainya secara otomatis dengan tambahaan 1 angaka sepeti ++ jika dalam bahasa pemrograman
+hanya berlaku jika tipe datanya adalah number tidak berlaku untuk huruf, auto increment hanya bisa di gunakan pada primary key
+
+    ##SAAT SUDAH TERLANJUT MEMBUAT TABLE##
+    ALTER TABLE nama_tabel MODIFY nama_kolom INT NOT NULL AUTO_INCREMENT;   =   jika sudah terlanjut membuat tabel
+
+    ##JIKA INGIN NEMABHAKAN SAAT MEMBUAT TABEL##
+    CREATE nama_tabel (
+        nama_kolom tipe_data NOT NULL AUTO_INCREMENT
+    );
+
+##STRING FUNCTION##
+merupakan sebuah function yang dapat mempermudah kita dalam melakukan mencari panjang dari suuatu kata,penghapusan spasi databse
+string function ini di sandignkan dengan perintah SELECT lalu di ikuti oleh string function tsb
+
+    SELECT id, LOWER(nama) AS "Nama Kecil" FROM product;
+    SELECT id, nama,LENGTH(nama) AS "Panjang nama" FROM product;
+
+##DATE DAN TIME FUNCTION##
+function untuk date dan time sangat banyak tetapi yang umum di gunakan yaitu YEAR(),MONTH() function yang berguna untuk mengambil sebagian data yang di butuhakan untuk waktu
+function ini di padukan dengan SELECT 
+
+    SELECT id, YEAR(kolom_waktu) AS "nama_alias" FROM nama_tabel;        =   akan mengambil tahun saja pada kolom waktu didalam tabel yang di tentukan
+    SELECT id, MONTH(kolom_waktu) AS "nama_alias" FROM nama_tabel;       =   akan mengambil bulan saja pada kolom waktu didalam tabel yang di tentukan
+
+    SELECT id,YEAR(waktu) AS "Tahun" FROM product;
+
+##FLOW CONTROL FUNCTION##
+flow control ini jika di dalam bahasa pemrograman mirip seperti if else hanya saja tidak bisa sekompleks if else
+di dalam mysql ada banyak jenis flowcontrol yang saya gunakan adalah CASE dan if    
+    CASE harus di akhiri dengan END     =   sama seperti switch case
+    kalau IF tidak perlu                =   sama seperti penggunaan ternary operator pada if else  
+    IFNULL                              =   jika ada nilai null maka akan berkondisi true
+    ##CASE-WHEN-THEN-ELSE## SEPERTI SWITCH CASE
+    SELECT nama_kolom,
+        CASE nama_kolom
+            WHEN "nilai_kolom" THEN "nilai_jika_ada"
+            WHEN "nilai_kolom" THEN "nilai_jika_ada"
+            ELSE "nilai_jika_tidak_ada"
+            END AS "nama_alias"
+        FROM nama_tabel;
+
+    SELECT id,
+        CASE kategori
+            WHEN "makanan" THEN "kenyang"
+            WHEN "minuman" THEN "segar"
+            ELSE "tidak ada jenisnya"
+            END AS "jenis"
+        FROM product;
+
+    ##IF##  SEPERTI TERNARY OPERATOR
+    SELECT nama_kolom,
+        IF(kondisi, "kondisi_jika_benar", "kondisi_jika_salah") AS "nama_alias"
+        FROM nama_tabel;
+
+    SELECT id,
+        IF(price < 2000, "Murah", "Mahal") AS "Tingkatan"
+        FROM product;
+
+ 
+    ##IFNULL##
+    SELECT nama_kolom,
+        IFNULL(nama_kolom,"nilai_jika_ada_null")
+        FROM nama_tabel;
+
+    SELECT nama,
+        IFNULL(kategori,"kosong")
+        FROM product;
+
+##AGGREGATE FUNCTION##
+aggregate function merupakan sebuah fungsi yang akan mengakumulaksian hasil sesuatu 
+seperti 
+    COUNT()         =   untuk mentotal
+    AVG()           =   untuk merata rata
+    MAX()           =   untuk mencari nilai tertinggi
+    MIN()           =   untuk mencari nilai terrendah
+
+    SELECT COUNT(price) AS "total Harga" FROM product;
+
+##GROUPING##
+GROUP BY merupakan sebuah keyword yang hanya bisa di gunakan jika kita menggunakan aggregate function
+HAVING  merupakan sebuah cara untuk melakukan where statmen atau where operation
+having hanya bisa di gunakan jika kita memakai aggregate function kalau menggunakan where clause tidak bisa di saat kita menggunakan aggregate function
+jadi group by akan berfungsi jika kita ingin melihat beberapa data nya 
+having merupakan statment pengganti where jika kita menggunakan aggregate function
+
+    SELECT COUNT(id),price FROM product;                                                   =   tidak akan berjalan dengan yang di harapkan karena ada beberapa baris yang tidak tampil
+    SELECT COUNT(id),price FROM product GROUP BY price;                                    =   akan menampilkan beberapa nama dan akan menyesuaikan dengan perintah yaitu menghitung jumlah id dan ada berapa banyak price nya
+    SELECT COUNT(id) as total ,kategori FROM product GROUP BY kategori HAVING total>2;     =   yang muncul total lebih dari 2
+
+##CONSTRAINT##
+Constraint merupakan sebuah cara untuk menjaga ke stabilan sebuah database 
+jadi Constraint itu merupakan alternatif untuk menjadag sebuah kestabilan suatu database supaya datanya tidak bermasalah
+
+
