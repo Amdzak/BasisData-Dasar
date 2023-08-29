@@ -267,5 +267,18 @@ having merupakan statment pengganti where jika kita menggunakan aggregate functi
 ##CONSTRAINT##
 Constraint merupakan sebuah cara untuk menjaga ke stabilan sebuah database 
 jadi Constraint itu merupakan alternatif untuk menjadag sebuah kestabilan suatu database supaya datanya tidak bermasalah
+Constraint bisa dijadikan untuk menjaga validasi sebuah inputan masuk, macam macam constraint
 
+    UNIQUE              =   untuk membuat sebuah nilai data tidak ada yang dobel seperti (username,email,nik,dkk)
 
+      ###SAAT MEMBUAT TABLE###
+        CREATE TABLE nama_table (
+            id INT NOT NULL,
+            nama VARCHAR(100) DEFAULT "none",
+            email VARCHAR(100) NOT NULL,
+            PRMARY KEY (id),
+            UNIQUE KEY email_uniqe (email,kolom_lain)
+        );
+      
+      ###JIKA SUDAH TERLANJUT BUAT TABLE###
+        ALTER TABLE nama_tabel ADD CONSTRAINT nama_bebas UNIQUE(kolom unik);
