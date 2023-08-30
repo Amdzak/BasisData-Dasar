@@ -270,15 +270,53 @@ jadi Constraint itu merupakan alternatif untuk menjadag sebuah kestabilan suatu 
 Constraint bisa dijadikan untuk menjaga validasi sebuah inputan masuk, macam macam constraint
 
     UNIQUE              =   untuk membuat sebuah nilai data tidak ada yang dobel seperti (username,email,nik,dkk)
+    CHECK               =   untuk melakukan pengecekan kepada sebuah data yang ingin di inputkan
 
-      ###SAAT MEMBUAT TABLE###
+      ###SAAT MEMBUAT TABLE CHECK CONSTRAINT###
+        CREATE TABLE nama_table (
+            id INT NOT NULL,
+            harga INT NOT NULL,
+            deskripsi TEXT.
+            PRMARY KEY (id),
+            CONSTRAINT nama_constraint jenis_constraint (kondisi)
+            CONSTRAINT harga_chek CHECK (harga >= 1000)
+        );
+
+      ###SAAT MEMBUAT TABLE UNIQUE CONSTRAINT###
         CREATE TABLE nama_table (
             id INT NOT NULL,
             nama VARCHAR(100) DEFAULT "none",
             email VARCHAR(100) NOT NULL,
+            no_hp int NOT NULL,
             PRMARY KEY (id),
-            UNIQUE KEY email_uniqe (email,kolom_lain)
+            UNIQUE KEY nama_constraint (kolom_tujuan,kolom_tujuan2),
+            UNIQUE KEY email_uniqe (email,no_hp)
         );
       
       ###JIKA SUDAH TERLANJUT BUAT TABLE###
-        ALTER TABLE nama_tabel ADD CONSTRAINT nama_bebas UNIQUE(kolom unik);
+        ALTER TABLE nama_tabel ADD CONSTRAINT nama_constraint jenis_constraint(kolom_tujuan/kondisi);          =   Untuk membuat constraint jika sudah terlanjut bikin table
+        ALTER TABLE nama_tabel DROP CONSTRAINT nama_constraint;                                                =   Untuk menghapus constraint yang sudah di buat
+
+### INDEX ###
+INDEX merupakan sebuah sebuah fitur dalam basis data yang berguna untuk mempercepat sebuah pencarian
+INDEX akan berada pada suatu kolom dan akan mempermudah dalam pencarian serta sangat berguna jika disandingkan dengan ORDER BY
+dalam 1 table dapat di beri beberapa index bahkan bisa tak terbatas tetapi jika terlalu banyak menambahkan index maka akan berpengaruh terhadap manipulasi data tersasa lambat tetapi akan mempercepat QUERY nya 
+jika sudah membuat PRIMARY KEY dan UNIQUE constraint maka secara default akan di buatkan INDEX
+
+HATI HATI JIKA INGINMENAMBAHKAN INDEX DI PERTENGAHAN SEBUAH APLIKASI YANG BERJALAN JIKA DATA BESAR MAKA DATABASE AKAN LEMOT DI SEBABKAN MYSQL AKAN MELAKUKAN UPDATE INDEX KEPADA KESELURUHAN DATA YANG ADA
+  
+      ###SAAT MEMBUAT TABLE###
+        CREATE TABLE nama_table (
+            id INT NOT NULL,
+            name VARCHAR(100) NOT NULL,
+            name2 VARCHAR(100) NOT NULL,
+            email VARCHAR(100) NOT NULL.
+            PRMARY KEY (id),
+            INDEX nama_index (kolom_tujuan,kolom_tujuan2)
+            INDEX index_name (name,name2)     /* jika sudah terindex maka bisa kita cari berdasarkan nama dan bisa lebih cepat */
+            /* jika kolom index lebih dari 2 maka bisa kita gunakan dengan operasi AND */
+        );
+
+      ###JIKA SUDAH TERLANJUT BUAT TABLE###
+      ALTER TABLE nama_tabel ADD INDEX nama_index(kolom_tujuan)              =   jika sudah terlanjut membuat table dan tidak menambhakan index
+      ALTER TABLE nama_tabel DROP INDEX nama_index(kolom_tujuan)             =   jika ingin menghapus index
